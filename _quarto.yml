@@ -32,7 +32,7 @@ csl: bibliography/chicago-parenthetical.csl
 
 # list all authors here in separate bullets
 author:
-  - name: Aaron Gullickson
+  - name: Samane Afshari
     orcid: 0000-0001-7237-8131
     email: aarong@uoregon.edu
     url: https://aarongullickson.netlify.app/
