@@ -1,5 +1,5 @@
 project:
-  title: "Samane Afshari"
+  title: "Energy Policy in the US"
   # the default output directory is _docs. If you want to serve up 
   # the results here from GitHub Pages, it might be easier to use docs,
   # but I prefer the underscore to keep consistent with quarto project
