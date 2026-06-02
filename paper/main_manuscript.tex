@@ -1,0 +1,394 @@
+% Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  12pt,
+  letterpaper,
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+
+
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+
+
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
+
+% -----------------------
+% CUSTOM PREAMBLE STUFF
+% -----------------------
+
+% -----------------
+% Title block stuff
+% -----------------
+
+% Abstract
+\usepackage[runin]{abstract}
+\renewcommand{\abstractnamefont}{\sffamily\small\bfseries}
+\renewcommand{\abstracttextfont}{\sffamily\small}
+\setlength{\absleftindent}{5pt}
+\setlength{\absrightindent}{\absleftindent}
+
+% Title
+\usepackage{titling}
+\pretitle{\par\begin{flushleft}\LARGE\sffamily\bfseries}
+\posttitle{\par\end{flushleft}\vskip 10pt}
+
+% Keywords
+\newenvironment{keywords}
+{\small\sffamily{\sffamily\small\bfseries{Keywords.}}}
+
+% Authors
+\usepackage{orcidlink}  % Create automatic ORCID icons/links
+%\renewcommand{\and}{\end{tabular} \hskip 3em \begin{tabular}[t]{@{\hspace{0em}}l@{}}}
+\preauthor{\begin{flushleft}
+           \lineskip 1.5em}
+\postauthor{\end{flushleft}}
+
+% ------------------
+% Section headings
+% ------------------
+\usepackage{titlesec}
+\titleformat*{\section}{\Large\sffamily\bfseries\raggedright}
+\titleformat*{\subsection}{\large\sffamily\bfseries\raggedright}
+\titleformat*{\subsubsection}{\normalsize\sffamily\bfseries\raggedright}
+\titleformat*{\paragraph}{\small\sffamily\bfseries\raggedright}
+
+%\titlespacing{<command>}{<left>}{<before-sep>}{<after-sep>}
+% Starred version removes indentation in following paragraph
+\titlespacing*{\section}{0em}{2em}{0.1em}
+\titlespacing*{\subsection}{0em}{1.25em}{0.1em}
+\titlespacing*{\subsubsection}{0em}{0.75em}{0em}
+
+% ------------------
+% Headers/Footers
+% ------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L,C,R]{}
+\fancyfoot[L,C]{}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{1pt}
+\fancypagestyle{plain}{%
+    \renewcommand{\headrulewidth}{0pt}%
+    \fancyhf{}%
+    \fancyfoot[R]{\thepage}%
+}
+\renewcommand\footnoterule{\rule{\linewidth}{0.1pt}\vspace{5pt}}
+
+% ------------------
+% Captions
+% ------------------
+\usepackage[labelfont=bf,labelsep=period]{caption}
+\captionsetup[figure]{font=footnotesize,justification=raggedright,singlelinecheck=false,format=hang}
+
+
+% ---------------------------
+% END CUSTOM PREAMBLE STUFF
+% ---------------------------
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={State Renewable Energy Policies and Renewable Electricity Generation: An Analysis of Renewable Portfolio Standards in 2008--2009},
+  pdfauthor={Samane Afshari},
+  pdfkeywords={Renewable Portfolio Standards, renewable energy
+production, US States},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={red},
+  pdfcreator={LaTeX via pandoc}}
+
+
+
+\title{State Renewable Energy Policies and Renewable Electricity
+Generation: An Analysis of Renewable Portfolio Standards in 2008--2009}
+% subtitles do not seem to work with article class?
+%%\subtitle{}
+
+\author{
+{\bfseries \normalsize Samane Afshari~\orcidlink{0000-0001-7237-8131}}%
+\thanks{Corresponding author.} \\%
+ \small University of Oregon,  \\%
+{\footnotesize \url{samaa@uoregon.edu}} \\\vspace{10pt}
+}
+
+\predate{}
+\postdate{}
+\date{}
+\begin{document}
+
+% for some reason this does not work in header
+\renewcommand{\abstractname}{Abstract.}
+
+% add the short title to the fancy header
+\fancyhead[R]{Paper}
+\fancyhead[L]{Samane Afshari}
+
+\maketitle
+%\noindent \rule{\linewidth}{.5pt}
+\begin{abstract}
+\ldots..
+\end{abstract}
+\begin{keywords}
+\def\sep{;\ }
+Renewable Portfolio Standards\sep renewable energy production\sep 
+US States
+\end{keywords}
+%\noindent \rule{\linewidth}{.5pt}
+
+
+\section{Introduction}\label{introduction}
+
+The transition toward renewable energy has become a central policy
+objective in the United States as concerns over climate change, carbon
+emissions, and fossil fuel dependence continue to intensify. In the
+absence of a unified federal leadership, state governments have
+increasingly emerged as major regulator in renewable energy governance
+through different energy-related policy instruments.
+
+Renewable Portfolio Standards (RPS) are among the most widely used
+state-level policy mechanisms because they require utilities to generate
+a specified share of electricity from renewable sources such as wind,
+solar, geothermal, and biomass. By 2008, more than half of U.S. states
+had adopted mandatory RPS programs, reflecting a broader shift toward
+decentralized energy governance and state-led climate action.
+
+Despite the rapid expansion of state renewable energy policies, there
+remains ongoing debate regarding whether these policies actually
+increase renewable energy production. Using PRS and Renewable
+Electricity Generation as the main variables, this study examines
+whether state-level renewable energy policies increase renewable
+electricity generation across U.S. states during 2008 and 2009.
+
+Existing literature has produced mixed findings on the effectiveness of
+Renewable Portfolio Standards. Early studies often relied on qualitative
+analyses or case studies that highlighted successful examples of
+renewable energy deployment but provided limited empirical evidence
+regarding broader policy effectiveness. More recent quantitative
+research has attempted to evaluate the relationship between RPS policies
+and renewable energy generation. For example, Carley (2009) examined
+whether state RPS adoption increased the share of renewable electricity
+generation across states and found that while RPS policies increased the
+total amount of renewable generation, they did not significantly
+increase renewable energy's share within total electricity production.
+
+This study builds directly on Carley's (2009) evaluation of state
+renewable electricity policies, as it extends Carley's core policy
+question into the 2008--2009 period, when more states had adopted RPS
+programs and policy designs had become more developed. This study offers
+a focused short-term reassessment of whether state renewable energy
+mandates were beginning to shift the composition of state electricity
+systems, not simply increase renewable generation in absolute terms.
+(Carley 2009).
+
+\section{Background}\label{background}
+
+\ldots.
+
+\section{Data and Methods}\label{data-and-methods}
+
+Independent Variable (IV): State Renewable Portfolio Standards (RPS) The
+independent variable is derived from the dataset U.S. State Electricity
+Resource Standards: 2024 Status Update, compiled by the Lawrence
+Berkeley National Laboratory (LBNL). The dataset provides information on
+state-level Renewable Portfolio Standards (RPS) and Clean Energy
+Standards (CES) across U.S. states, including policy adoption dates,
+renewable energy targets, and compliance timelines. For this study, the
+dataset can be used to measure whether a state has adopted an RPS policy
+and the strength of the policy target over time, though the research
+only focus on 2008 and 2009.
+
+Dependent Variable (DV): Renewable Electricity Generation Share The
+dependent variable is drawn from the U.S. Energy Information
+Administration (EIA) Annual Energy Review renewable electricity
+generation dataset. The dataset provides state-level information on
+electricity generation and the percentage of generation derived from
+renewable energy sources in 2008 and 2009. In this study, the dependent
+variable is the share of electricity generation from renewable energy
+sources, with particular attention to the ``percent non-hydro
+renewable'' measure, which captures renewable generation from sources
+such as wind, solar, geothermal, and biomass while excluding
+conventional hydroelectric power. This measure is appropriate because it
+reflects the types of renewable energy sources most directly influenced
+by modern RPS policies.
+
+\section{Results}\label{results}
+
+\section{Conclusions}\label{conclusions}
+
+\section{References}\label{references}
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+Data source: Lawrence Berkeley National Laboratory RPS Dataset Data
+source: U.S. Energy Information Administration Renewable Energy Annual
+Data
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-carley2009}
+Carley, Sanya. 2009. {``State Renewable Energy Electricity Policies: An
+Empirical Evaluation of Effectiveness.''} \emph{Energy Policy} 37 (8):
+3071--81. \url{https://doi.org/10.1016/j.enpol.2009.03.062}.
+
+\end{CSLReferences}
+
+\bibitem[\citeproctext]{ref-carley2009}
+Carley, Sanya. 2009. {``State Renewable Energy Electricity Policies: An
+Empirical Evaluation of Effectiveness.''} \emph{Energy Policy} 37 (8):
+3071--81. \url{https://doi.org/10.1016/j.enpol.2009.03.062}.
+
+\end{CSLReferences}
+
+
+
+
+\end{document}

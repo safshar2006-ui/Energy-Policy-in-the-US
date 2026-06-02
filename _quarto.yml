@@ -34,13 +34,13 @@ csl: bibliography/chicago-parenthetical.csl
 author:
   - name: Samane Afshari
     orcid: 0000-0001-7237-8131
-    email: aarong@uoregon.edu
-    url: https://aarongullickson.netlify.app/
+    email: samaa@uoregon.edu
+    url: 
     attributes:
       corresponding: true
     affiliations:
       - name: University of Oregon
-        department: Sociology
+        department:
         address: 727 PLC
         city: Eugene
         region: OR

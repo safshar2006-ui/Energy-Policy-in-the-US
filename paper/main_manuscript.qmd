@@ -1,12 +1,11 @@
 ---
 # basic information
-title: "Paper Manuscript"
-keywords: [keyword1, keyword2]
-thanks: Thanks to everyone for checking this out.
+title: "State Renewable Energy Policies and Renewable Electricity Generation: An Analysis of Renewable Portfolio Standards in 2008–2009"
+keywords: [Renewable Portfolio Standards, renewable energy production, US States]
 
 # information used by aog-article format
 shorttitle: "Paper"
-shortauthors: Gullickson
+shortauthors: Samane Afshari
 
 ## bibliographic information is in the _quarto.yml for the project ##
 
@@ -45,13 +44,23 @@ source(here("utils","functions.R"))
 
 # Abstract
 
-Abstract goes here.
+.....
 
 # Introduction
 
-This quarto doc is for writing the manuscript. This is a test citation [@alba1990].
+The transition toward renewable energy has become a central policy objective in the United States as concerns over climate change, carbon emissions, and fossil fuel dependence continue to intensify. In the absence of a unified federal leadership, state governments have increasingly emerged as major regulator in renewable energy governance through different energy-related policy instruments. 
+
+Renewable Portfolio Standards (RPS) are among the most widely used state-level policy mechanisms because they require utilities to generate a specified share of electricity from renewable sources such as wind, solar, geothermal, and biomass. By 2008, more than half of U.S. states had adopted mandatory RPS programs, reflecting a broader shift toward decentralized energy governance and state-led climate action. 
+
+Despite the rapid expansion of state renewable energy policies, there remains ongoing debate regarding whether these policies actually increase renewable energy production. Using PRS and Renewable Electricity Generation as the main variables, this study examines whether state-level renewable energy policies increase renewable electricity generation across U.S. states during 2008 and 2009. 
+
+Existing literature has produced mixed findings on the effectiveness of Renewable Portfolio Standards. Early studies often relied on qualitative analyses or case studies that highlighted successful examples of renewable energy deployment but provided limited empirical evidence regarding broader policy effectiveness. More recent quantitative research has attempted to evaluate the relationship between RPS policies and renewable energy generation. For example, Carley (2009) examined whether state RPS adoption increased the share of renewable electricity generation across states and found that while RPS policies increased the total amount of renewable generation, they did not significantly increase renewable energy’s share within total electricity production.
+
+This study builds directly on Carley’s (2009) evaluation of state renewable electricity policies, as it extends Carley’s core policy question into the 2008–2009 period, when more states had adopted RPS programs and policy designs had become more developed. This study offers a focused short-term reassessment of whether state renewable energy mandates were beginning to shift the composition of state electricity systems, not simply increase renewable generation in absolute terms. [@carley2009].
+
 
 # Background
+....
 
 # Data and Methods
 Independent Variable (IV): State Renewable Portfolio Standards (RPS)
@@ -69,6 +78,7 @@ The dependent variable is drawn from the U.S. Energy Information Administration 
 
 <!-- Explicitly place references -->
 # References
+:::{#refs}
 Data source: Lawrence Berkeley National Laboratory RPS Dataset
 Data source: U.S. Energy Information Administration Renewable Energy Annual Data
 

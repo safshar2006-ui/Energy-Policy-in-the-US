@@ -29,7 +29,6 @@ This quarto doc is used to organize the data.
 
 rps <- read_excel(here("data", "data_raw", "RPS.xlsx"))
 
-generation <- read_excel(here("data", "data_raw", "generation.xls"))
 ```
 
 # Inspect Data
@@ -38,13 +37,48 @@ generation <- read_excel(here("data", "data_raw", "generation.xls"))
 #| label: inspect-data
 
 names(rps)
-names(generation)
 
 glimpse(rps)
-glimpse(generation)
-```
+str(rps)
+dim(rps)
 ```
 
+```{r}
+summary(rps)
+```
+
+```{r}
+# Rename variables
+cleaned_dataset <- rps %>%
+  rename(
+    state = State,
+    rps_2008 = RPS2008,
+    rps_2009 = PRS2009,
+    renewable_share_2008 = `%Renewable2008`,
+    renewable_share_2009 = `%Renewable2009`
+  )
+```
+
+```{r}
+# State as factor
+cleaned_dataset <- cleaned_dataset %>%
+  mutate(
+    state = factor(state)
+  )
+```
+
+```{r}
+# missing values 
+summary(cleaned_dataset)
+```
+```{r}
+# change variabel 
+cleaned_dataset <- cleaned_dataset %>%
+  mutate(
+    rps_change = rps_2009 - rps_2008,
+    renewable_share_change = renewable_share_2009 - renewable_share_2008
+  )
+```
 
 ```{r}
 #label: timestamp-end
