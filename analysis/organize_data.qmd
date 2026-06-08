@@ -7,6 +7,7 @@ title: "Organize Data Notebook"
 
 library(readxl)
 library(tidyverse)
+library(here)
 ```{r}
 #label: timestamp-start
 
@@ -28,57 +29,190 @@ This quarto doc is used to organize the data.
 ```{r}
 
 rps <- read_excel(here("data", "data_raw", "RPS.xlsx"))
+generation <- read_excel(here("data", "data_raw", "generation.xls"))
 
-```
 
-# Inspect Data
-
-```{r}
-#| label: inspect-data
-
-names(rps)
-
-glimpse(rps)
-str(rps)
-dim(rps)
+total_renewables <- read_excel(here("data", "data_raw", "Total_Renewables.xlsx")
 ```
 
 ```{r}
-summary(rps)
+# clean rps
+rps <- read_excel(here("data", "data_raw", "RPS.xlsx"), skip = 24)
+rps <- rps |> 
+  rename(state = State, rps_tier = `RPS Tier or Carve Out`) |>
+  #  Total RPS
+  filter(str_detect(rps_tier, "^Total RPS")) |>
+  select(state, starts_with("20")) |>
+  pivot_longer(cols = starts_with("20"), names_to = "year", 
+               values_to = "rps_total") |>
+  mutate(year = as.numeric(year))
+
+# clean 2: reverting states names from abbreviation to full name 
+rps <- rps |>
+  mutate(
+    state = recode(state,
+      !!!setNames(state.name, state.abb),
+      "DC" = "District of Columbia"
+    )
+  )
+
+# clean rps 3: Keep states that have rps data
+states_keep <- c(
+  "Arizona", "California", "Colorado", "Connecticut",
+  "Delaware", "Hawaii", "Iowa", "Illinois", "Kansas",
+  "Massachusetts", "Maryland", "Maine", "Michigan",
+  "Minnesota", "Missouri", "Montana", "North Carolina",
+  "Nebraska", "New Hampshire", "New Jersey", "New Mexico",
+  "Nevada", "New York", "Ohio", "Oregon", "Pennsylvania",
+  "Rhode Island", "Texas", "Virginia", "Washington",
+  "Wisconsin", "District of Columbia"
+)
+
+rps <- rps |>
+  filter(
+    state %in% states_keep,
+    year %in% c(2008, 2009)
+  )
 ```
 
+
 ```{r}
-# Rename variables
-cleaned_dataset <- rps %>%
+# clean renewable generation  
+generation <- read_excel(here("data", "data_raw", "generation.xls"), skip = 6)
+ 
+# check 
+names(generation)
+head(generation, 10)
+tail(generation, 10)
+glimpse(generation)
+
+# clean 2
+generation <- generation |>
+  select(State, `2008`, `...3`, `2009`, `...8`) |>
   rename(
     state = State,
-    rps_2008 = RPS2008,
-    rps_2009 = PRS2009,
-    renewable_share_2008 = `%Renewable2008`,
-    renewable_share_2009 = `%Renewable2009`
+    total_generation_2008 = `2008`,
+    percent_renewable_2008 = `...3`,
+    total_generation_2009 = `2009`,
+    percent_renewable_2009 = `...8`
   )
-```
 
-```{r}
-# State as factor
-cleaned_dataset <- cleaned_dataset %>%
+# clean 3
+generation_long <- generation |>
+  pivot_longer(
+    cols = -state,
+    names_to = c(".value", "year"),
+    names_pattern = "(.*)_(\\d{4})"
+  ) |>
   mutate(
-    state = factor(state)
+    year = as.numeric(year),
+    total_generation = as.numeric(total_generation),
+    percent_renewable = as.numeric(percent_renewable)
+  )
+
+# clean 4: keep states that have RPS data avaialble
+states_keep <- c(
+  "Arizona",
+  "California",
+  "Colorado",
+  "Connecticut",
+  "DC",
+  "Delaware",
+  "Hawaii",
+  "Iowa",
+  "Illinois",
+  "Kansas",
+  "Massachusetts",
+  "Maryland",
+  "Maine",
+  "Michigan",
+  "Minnesota",
+  "Missouri",
+  "Montana",
+  "North Carolina",
+  "Nebraska",
+  "New Hampshire",
+  "New Jersey",
+  "New Mexico",
+  "Nevada",
+  "New York",
+  "Ohio",
+  "Oregon",
+  "Pennsylvania",
+  "Rhode Island",
+  "Texas",
+  "Virginia",
+  "Washington",
+  "Wisconsin"
+)
+
+generation <- generation |>
+  filter(state %in% states_keep)
+
+sort(unique(generation$state))
+```
+
+```{r}
+# merge rps and generation and craete final dateset 
+energy_data <- rps |>
+  left_join(
+    generation_long,
+    by = c("state", "year")
   )
 ```
 
 ```{r}
+# handling missing values 
+energy_data |>
+  summarise(
+    across(
+      everything(),
+      ~ sum(is.na(.))
+    )
+  )
+
 # missing values 
-summary(cleaned_dataset)
-```
-```{r}
-# change variabel 
-cleaned_dataset <- cleaned_dataset %>%
-  mutate(
-    rps_change = rps_2009 - rps_2008,
-    renewable_share_change = renewable_share_2009 - renewable_share_2008
+energy_data |>
+  summarise(across(everything(), ~ sum(is.na(.)))) |>
+  pivot_longer(
+    everything(),
+    names_to = "variable",
+    values_to = "n_missing"
+  ) |>
+  arrange(desc(n_missing))
+
+#
+energy_data |>
+  filter(
+    is.na(total_generation) |
+    is.na(percent_renewable)
   )
+
+# missing values 
+energy_data <- energy_data |>
+  drop_na(total_generation, percent_renewable)
 ```
+
+
+```{r}
+# save data
+save(
+  energy_data,
+  file = here(
+    "data",
+    "data_constructed",
+    "analytical_data.RData"
+  )
+)
+```
+
+
+```{r}
+# analysis 
+
+```
+
+
 
 ```{r}
 #label: timestamp-end
