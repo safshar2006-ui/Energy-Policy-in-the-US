@@ -8,6 +8,9 @@ title: "Organize Data Notebook"
 library(readxl)
 library(tidyverse)
 library(here)
+library(modelsummary)
+library(gt)
+library(here)
 ```{r}
 #label: timestamp-start
 
@@ -195,6 +198,11 @@ energy_data <- energy_data |>
 
 
 ```{r}
+# chnage to percentage 
+energy_data <- energy_data |>
+  mutate(
+    rps_percent = rps_total * 100
+  )
 # save data
 save(
   energy_data,
@@ -210,9 +218,105 @@ save(
 ```{r}
 # analysis 
 
+load(
+  here(
+    "data",
+    "data_constructed",
+    "analytical_data.RData"
+  )
+)
+```
+
+```{r}
+# Descriptive statistics 
+datasummary_skim(
+  energy_data
+)
+
+# The analytical dataset contains 60 state-year observations representing 30 states observed in 2008 and 2009. The dataset combines information on Renewable Portfolio Standards (RPS) with state-level electricity generation data. RPS requirements range from 0% to approximately 35% of total electricity generation, with an average requirement of 5.3%. Renewable electricity generation exhibits substantial variation across states, ranging from less than 1% to nearly 75% of total generation. The average renewable generation share is 13.7%, while the median is only 5.8%, indicating that renewable generation is highly concentrated in a small number of states.
+
+```
+```{r}
+ggplot(
+  energy_data,
+  aes(
+    x = rps_total,
+    y = percent_renewable
+  )
+) +
+  geom_point() +
+  geom_smooth(
+    method = "lm",
+    se = TRUE
+  ) +
+  labs(
+    x = "Renewable Portfolio Standard",
+    y = "Renewable Generation Share",
+    title = "Relationship between RPS and Renewable Generation"
+  )
+
+Figure 1 presents a scatterplot of state Renewable Portfolio Standards and renewable electricity generation shares. The fitted regression line suggests a positive relationship between the two variables, indicating that states with stronger RPS requirements tend to generate a larger share of their electricity from renewable sources. However, the relationship is not particularly strong. Several states with very low or zero RPS requirements nevertheless exhibit high renewable generation shares, likely reflecting favorable natural resource endowments such as hydropower availability. This pattern suggests that factors beyond policy mandates also influence renewable electricity generation outcomes.
+```
+```{r}
+# Figure 2
+ggplot(
+  energy_data,
+  aes(
+    factor(year),
+    percent_renewable
+  )
+) +
+  geom_boxplot() +
+  labs(
+    x = "Year",
+    y = "Renewable Generation Share"
+  )
+```
+
+```{r}
+# model 
+model1 <- lm(
+  percent_renewable ~ rps_total,
+  data = energy_data
+)
+summary(model1)
+# Model 1: Bivariate Relationship
+To examine the relationship more formally, I estimated a simple linear regression model with renewable electricity generation share as the dependent variable and RPS requirements as the independent variable.
+The results indicate a positive and statistically significant association between RPS requirements and renewable generation. The coefficient for RPS is 58.65 (p = 0.041), suggesting that a one-unit increase in the RPS proportion is associated with an increase of approximately 58.7 percentage points in renewable generation. Because RPS is measured as a proportion ranging from 0 to 1, a more realistic interpretation is that a 10 percentage point increase in an RPS requirement is associated with roughly a 5.9 percentage point increase in renewable generation share.
+Although statistically significant, the model explains only a modest portion of the variation in renewable generation (R² = 0.07). This indicates that most of the differences in renewable generation across states are driven by factors not included in the model.
 ```
 
 
+```{r}
+# model 2
+model2 <- lm(
+  percent_renewable ~
+    rps_total +
+    total_generation,
+  data = energy_data
+)
+summary(model2)
+
+# Model 2: Controlling for Total Electricity Generation
+A second model adds total electricity generation as a control variable. The inclusion of this variable does not substantially alter the estimated effect of RPS requirements. The coefficient for RPS remains positive and statistically significant (β = 59.17, p = 0.040), suggesting that the relationship between renewable portfolio standards and renewable generation is robust to differences in state electricity production levels.
+In contrast, total electricity generation is not statistically significant (p = 0.448), indicating that larger electricity-producing states do not necessarily have higher renewable generation shares. The overall explanatory power of the model increases only slightly (R² = 0.08), and the adjusted R² remains low.
+# Preliminary Findings
+Overall, the preliminary analysis provides evidence consistent with the expectation that stronger Renewable Portfolio Standards are associated with higher levels of renewable electricity generation. However, the relatively low R² values and the substantial dispersion observed in Figure 1 suggest that policy mandates alone do not fully explain renewable energy outcomes. State-specific characteristics, including resource availability, geographic conditions, historical energy infrastructure, and political factors, are likely important determinants of renewable electricity generation and should be considered in future analyses.
+```
+
+```{r}
+# regression model 
+modelsummary(
+  list(
+    "Model 1" = model1,
+    "Model 2" = model2
+  )
+)
+```
+
+```{r}
+
+```
 
 ```{r}
 #label: timestamp-end
