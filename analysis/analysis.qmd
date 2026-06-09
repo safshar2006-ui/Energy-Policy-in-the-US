@@ -16,7 +16,6 @@ source(here("utils","check_packages.R"))
 source(here("utils","functions.R"))
 ```
 
-This quarto doc is used to analyze the data.
 
 ```{r}
 #label: timestamp-end
