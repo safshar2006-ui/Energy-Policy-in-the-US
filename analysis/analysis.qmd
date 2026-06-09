@@ -40,10 +40,45 @@ Figure 1 also displays the relationship between Renewable Portfolio Standards an
 The scatterplot suggests a positive relationship between the two variables. States with stronger renewable energy mandates generally tend to exhibit higher shares of renewable electricity generation. However, the relationship is not especially strong, as considerable variation remains around the fitted regression line.
 
 Several states exhibit relatively high levels of renewable generation despite having weak or nonexistent RPS requirements. These cases likely reflect the importance of factors such as hydropower availability, geographic conditions, historical infrastructure investments, and resource endowments. Consequently, policy mandates alone may not fully explain renewable electricity outcomes.
+```{r}
+ggplot(
+  energy_data,
+  aes(
+    x = rps_total,
+    y = percent_renewable
+  )
+) +
+  geom_point() +
+  geom_smooth(
+    method = "lm",
+    se = TRUE
+  ) +
+  labs(
+    x = "Renewable Portfolio Standard",
+    y = "Renewable Generation Share",
+    title = "Relationship between RPS and Renewable Generation"
+  )
+```
+
 
 #Figure 2: Renewable Generation Across Time
 Figure 2 presents boxplots of renewable electricity generation shares in 2008 and 2009.
 The distributions appear relatively similar across the two years, suggesting that large shifts in renewable generation did not occur during this short time period. This observation is important because limited variation over time may reduce the ability of fixed-effects models to identify policy effects.
+```{r}
+ggplot(
+  energy_data,
+  aes(
+    factor(year),
+    percent_renewable
+  )
+) +
+  geom_boxplot() +
+  labs(
+    x = "Year",
+    y = "Renewable Generation Share"
+  )
+```
+
 
 # Model 1: Ordinary Least Squares Regression
 The first model estimates a simple bivariate relationship between Renewable Portfolio Standards and renewable electricity generation.
@@ -77,12 +112,28 @@ Neither RPS requirements nor total electricity generation are statistically sign
 
 The inclusion of the control variable does not materially alter the findings, suggesting that the lack of a detectable policy effect is not driven by differences in electricity generation scale across states.
 
+```{r}
+library(modelsummary)
+
+modelsummary(
+  list(
+    "OLS" = model1,
+    "State FE" = model2,
+    "State + Year FE" = model3,
+    "FE + Control" = model4
+  )
+)
+```
+
+
 # Conclusion
 This preliminary analysis provides mixed evidence regarding the relationship between Renewable Portfolio Standards and renewable electricity generation. The bivariate OLS model suggests a positive and statistically significant association between stronger renewable energy mandates and renewable electricity production. However, this relationship disappears once state and year fixed effects are introduced.
 
 These findings indicate that differences between states may explain much of the observed relationship. States with stronger renewable energy policies may also possess favorable institutional, geographic, or economic conditions that support renewable energy development.
 
 Several limitations should be acknowledged. First, the dataset covers only two years (2008-2009), providing limited temporal variation. Second, renewable energy outcomes are influenced by many factors not included in the current models, such as natural resource availability, electricity prices, political institutions, and economic conditions. Future analysis should incorporate a longer time series and additional control variables to better assess the long-term effects of Renewable Portfolio Standards on renewable electricity generation.
+
+
 
 ```{r}
 #label: timestamp-end
