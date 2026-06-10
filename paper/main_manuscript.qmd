@@ -42,6 +42,16 @@ source(here("utils","check_packages.R"))
 source(here("utils","functions.R"))
 ```
 
+```{r}
+load(
+  here(
+    "data",
+    "data_constructed",
+    "analytical_data.RData"
+  )
+)
+```
+
 # Abstract
 
 .....

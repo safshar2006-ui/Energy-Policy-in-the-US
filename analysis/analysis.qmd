@@ -8,12 +8,27 @@ title: "Research Analysis Notebook"
 timestamp()
 ```
 
+
 ```{r}
 #| label: setup
 #| include: false
 library(here)
 source(here("utils","check_packages.R"))
 source(here("utils","functions.R"))
+```
+
+```{r}
+load(
+  here(
+    "data",
+    "data_constructed",
+    "analytical_data.RData"
+  )
+)
+```
+
+```{r}
+glimpse(energy_data)
 ```
 
 # Introduction
@@ -64,21 +79,6 @@ ggplot(
 #Figure 2: Renewable Generation Across Time
 Figure 2 presents boxplots of renewable electricity generation shares in 2008 and 2009.
 The distributions appear relatively similar across the two years, suggesting that large shifts in renewable generation did not occur during this short time period. This observation is important because limited variation over time may reduce the ability of fixed-effects models to identify policy effects.
-```{r}
-ggplot(
-  energy_data,
-  aes(
-    factor(year),
-    percent_renewable
-  )
-) +
-  geom_boxplot() +
-  labs(
-    x = "Year",
-    y = "Renewable Generation Share"
-  )
-```
-
 
 # Model 1: Ordinary Least Squares Regression
 The first model estimates a simple bivariate relationship between Renewable Portfolio Standards and renewable electricity generation.
@@ -111,20 +111,6 @@ The final specification adds total electricity generation as a control variable.
 Neither RPS requirements nor total electricity generation are statistically significant predictors of renewable generation share. The coefficient for RPS remains small and close to zero (β = -0.055, p = .783), while total electricity generation also shows no significant association.
 
 The inclusion of the control variable does not materially alter the findings, suggesting that the lack of a detectable policy effect is not driven by differences in electricity generation scale across states.
-
-```{r}
-library(modelsummary)
-
-modelsummary(
-  list(
-    "OLS" = model1,
-    "State FE" = model2,
-    "State + Year FE" = model3,
-    "FE + Control" = model4
-  )
-)
-```
-
 
 # Conclusion
 This preliminary analysis provides mixed evidence regarding the relationship between Renewable Portfolio Standards and renewable electricity generation. The bivariate OLS model suggests a positive and statistically significant association between stronger renewable energy mandates and renewable electricity production. However, this relationship disappears once state and year fixed effects are introduced.
