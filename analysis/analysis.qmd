@@ -27,10 +27,6 @@ load(
 )
 ```
 
-```{r}
-# checking 
-names(final_data)
-```
 
 # Research Question
 
