@@ -41,14 +41,14 @@ Renewable_Generation2 <- read_excel(here("data", "data_raw", "Total Renewable en
 
 
 ```{r}
-# checking Basic structure
+# checking basic structure
 glimpse(RPS)
 glimpse(Renewable_Generation1)
 glimpse(Renewable_Generation2)
 ```
 
 ```{r}
-# checking Column names
+# checking column names
 names(RPS)
 names(Renewable_Generation1)
 names(Renewable_Generation2)
@@ -56,15 +56,16 @@ names(energy_data)
 ```
 
 ```{r}
-# checking First few rows
+# checking first few rows
 head(RPS)
 head(Renewable_Generation1)
 head(Renewable_Generation2)
 ```
 
 ```{r}
-# clean rps
+# clean RPS
 RPS <- read_excel(here("data", "data_raw", "RPS.xlsx"), skip = 24)
+
 RPS <- RPS |> 
   rename(state = State, rps_tier = `RPS Tier or Carve Out`) |>
   #  Total RPS
@@ -98,7 +99,7 @@ names(Renewable_Generation1) <- as.character(
 # Removing the first two rows
 Renewable_Generation1 <- Renewable_Generation1[-c(1,2), ]
 
-# 2
+# for sheet 2
 names(Renewable_Generation2) <- as.character(
   Renewable_Generation2[2, ]
 )
@@ -117,7 +118,7 @@ Renewable_Generation2 <- Renewable_Generation2 |>
 ```
 
 ```{r}
-# merging RPS and renewable generation 
+# merging RPS and renewable generation dataset
 energy_data <- Renewable_Generation1 |>
   left_join(
     Renewable_Generation2,
@@ -198,7 +199,7 @@ final_data |>
 
 
 ```{r}
-# Descriptive statistics 
+# Descriptive statistics 2
 datasummary_skim(
   final_data
 )
@@ -230,7 +231,7 @@ final_data |>
 
 
 ```{r}
-# PRS and renewable generation 
+# Figure - PRS and renewable generation 
 library(ggplot2)
 
 ggplot(
@@ -278,6 +279,7 @@ ggplot(
 ```
 
 ```{r}
+# Figure 3
 ggplot(
   final_data,
   aes(
@@ -304,7 +306,6 @@ model1 <- lm(
 
 summary(model1)
 ```
-
 
 
 ```{r}
