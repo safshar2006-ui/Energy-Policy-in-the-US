@@ -31,96 +31,65 @@ load(
 glimpse(energy_data)
 ```
 
-# Introduction
-This project examines whether Renewable Portfolio Standards (RPS) are associated with higher levels of renewable electricity generation across U.S. states. Renewable Portfolio Standards require utilities to obtain a specified proportion of their electricity from renewable energy sources and are among the most widely used state-level renewable energy policies in the United States. The central research question is whether states with stronger RPS requirements generate a larger share of their electricity from renewable sources.
-To investigate this relationship, I combine state-level RPS data with electricity generation data in 2008 and 2009. The analysis proceeds in several stages. First, descriptive statistics and visualizations are used to explore variation in renewable energy generation and RPS requirements across states. Second, a series of regression models are estimated, beginning with a simple bivariate ordinary least squares (OLS) model and progressing to state and year fixed-effects specifications.
 
-# Data Description
-The analytical dataset contains 60 state-year observations representing 30 U.S. states observed in 2008 and 2009. The dataset combines information on Renewable Portfolio Standards with state electricity generation statistics.
+# Interpreting Descriptive Statistics 
+Table 1 presents descriptive statistics for the state-year panel dataset covering 32 jurisdictions with Renewable Portfolio Standards (RPS) between 2000 and 2023 (N = 768 observations). The average share of electricity generated from renewable sources was 42.2%, with substantial variation across observations (SD = 38.0). Renewable generation shares ranged from less than 1% to 100%, indicating considerable heterogeneity in renewable energy adoption across states and over time. The median renewable share (26.3%) is notably lower than the mean, suggesting a right-skewed distribution in which a subset of states achieved exceptionally high levels of renewable generation.
 
-The primary dependent variable is renewable electricity generation share, measured as the percentage of total electricity generated from renewable sources in each state-year. The primary independent variable is the state's Renewable Portfolio Standard requirement, measured as the percentage of electricity generation required to come from renewable sources.
+The key independent variable, Renewable Portfolio Standards, also exhibits substantial variation. Across all state-year observations, the average RPS requirement was 9.1%, with values ranging from 0% to 63%. The median RPS requirement of 5.4% indicates that many observations correspond to relatively modest policy mandates, while a smaller number of states adopted more ambitious renewable energy targets. This variation is important for identifying the relationship between policy stringency and renewable energy outcomes.
 
-Because renewable energy development is influenced by numerous factors beyond policy mandates, additional controls and fixed effects are incorporated in later models to account for differences across states and over time.
+The dataset contains a balanced panel of 32 jurisdictions observed annually over a 24-year period, with each state contributing an equal number of observations. Renewable energy generation averaged approximately 124,000 billion Btu, while total energy generation averaged roughly 1.29 million billion Btu. Both variables exhibit substantial dispersion, reflecting large differences in the scale of energy systems across states. The wide range of renewable generation shares, together with meaningful variation in RPS requirements, provides an appropriate empirical foundation for examining whether stronger renewable energy mandates are associated with greater renewable electricity production.
 
-# Descriptive Statistics
-Table 1 in 'organize_data.qmd' presents descriptive statistics for the analytical variables.
+The descriptive statistics also highlight an important characteristic of the sample. Although all jurisdictions included in the analysis adopted some form of Renewable Portfolio Standard during the study period, the stringency and timing of these policies varied considerably. Consequently, the analysis primarily examines variation among RPS-adopting states rather than differences between adopting and non-adopting states. The results should therefore be interpreted as evidence regarding the effectiveness of stronger versus weaker renewable energy mandates within the population of states that implemented RPS policies.
 
-The average renewable electricity generation share across state-year observations is approximately 13.7%, although substantial variation exists across states. Renewable generation ranges from less than 1% to nearly 75% of total electricity generation. The distribution is positively skewed, with a median value substantially lower than the mean, indicating that a relatively small number of states account for disproportionately high levels of renewable electricity generation.
+# Interpreting the regression plot
 
-Renewable Portfolio Standards also vary considerably. The average RPS requirement is approximately 5.3%, with some states having no renewable requirement and others requiring more than 30% renewable generation. This variation provides an opportunity to examine whether stronger renewable energy mandates are associated with greater renewable electricity production.
+Figure 1 displays the relationship between Renewable Portfolio Standards (RPS) and renewable electricity generation. The fitted regression line indicates a positive relationship, suggesting that states with stronger renewable energy mandates tend to generate a larger share of their electricity from renewable sources. As RPS requirements increase, renewable generation generally increases as well.
+At the same time, the figure reveals substantial variation around the trend line. States with similar RPS requirements often exhibit very different levels of renewable generation, indicating that factors beyond policy mandates influence renewable energy outcomes. Natural resource availability, geographic conditions, electricity market structures, historical energy investments, and political support for renewable energy may all contribute to these differences.
+A notable feature of the figure is the large concentration of observations at the upper boundary of 100% renewable generation. Approximately 18% of observations fall at this maximum value, creating a visible horizontal cluster across the top of the plot. This pattern suggests that many state-year observations achieved extremely high levels of renewable electricity generation regardless of their RPS requirement. Consequently, the relationship between RPS and renewable generation appears positive but far from deterministic.
+The figure also shows a substantial number of observations with RPS values close to zero. Some of these observations nevertheless exhibit relatively high renewable generation shares, suggesting that renewable energy production may result from favorable resource endowments or historical energy systems even in the absence of strong renewable portfolio mandates.
 
-# Figure 1: Relationship Between RPS and Renewable Generation
-Figure 1 also displays the relationship between Renewable Portfolio Standards and renewable electricity generation.
+# Interpreting the boxplot
+The Boxplot presents the distribution of renewable electricity generation shares across states from 2000 to 2023. Several important patterns emerge.
+First, the median renewable generation share increases over time, rising from approximately 20% in the early 2000s to roughly 35% by 2023. This suggests that renewable energy has become a progressively larger component of state electricity portfolios during the study period.
+Second, the upper portion of the distribution shifts upward substantially over time. By the mid-2010s and especially after 2020, the upper quartiles approach or reach 100%, indicating that a growing number of state-year observations achieved very high levels of renewable electricity generation. This pattern is consistent with the expansion of renewable energy technologies, increasing policy support, declining technology costs, and broader decarbonization efforts across many states.
+Third, considerable variation remains across states throughout the entire period. Even in recent years, some states exhibit relatively low renewable generation shares while others approach complete reliance on renewable electricity sources. The persistence of wide interquartile ranges indicates substantial heterogeneity in state energy systems, resource endowments, policy environments, and infrastructure capacities.
+Finally, the figure suggests a gradual upward trend rather than an abrupt change. Renewable generation appears to increase steadily over the study period, which aligns with expectations that energy transitions occur incrementally due to the long planning horizons and capital investments required for electricity infrastructure.
 
-The scatterplot suggests a positive relationship between the two variables. States with stronger renewable energy mandates generally tend to exhibit higher shares of renewable electricity generation. However, the relationship is not especially strong, as considerable variation remains around the fitted regression line.
+# Interpreting State-Level Renewable Generation Trends
 
-Several states exhibit relatively high levels of renewable generation despite having weak or nonexistent RPS requirements. These cases likely reflect the importance of factors such as hydropower availability, geographic conditions, historical infrastructure investments, and resource endowments. Consequently, policy mandates alone may not fully explain renewable electricity outcomes.
-```{r}
-ggplot(
-  energy_data,
-  aes(
-    x = rps_total,
-    y = percent_renewable
-  )
-) +
-  geom_point() +
-  geom_smooth(
-    method = "lm",
-    se = TRUE
-  ) +
-  labs(
-    x = "Renewable Portfolio Standard",
-    y = "Renewable Generation Share",
-    title = "Relationship between RPS and Renewable Generation"
-  )
-```
+Figure 3 presents state-level trends in renewable electricity generation shares between 2000 and 2023. Each line represents a state's renewable generation share over time. The figure reveals substantial heterogeneity in renewable energy trajectories across states.
+Several states exhibit consistently high renewable generation shares throughout the study period, maintaining levels above 75% and in some cases approaching 100%. Other states begin with relatively low renewable generation shares but experience gradual increases over time. A third group of states remains at comparatively low levels throughout the period, indicating limited growth in renewable electricity production.
+Overall, the figure suggests that renewable electricity generation has generally increased across many states over the last two decades. However, the pace and magnitude of change vary considerably. While some states experienced substantial growth in renewable generation, others showed only modest increases. This variation highlights the importance of state-specific factors, including natural resource endowments, energy infrastructure, electricity market structures, policy environments, and economic conditions.
+One particularly notable pattern is the presence of several states that experience sharp increases in renewable generation during the study period. These abrupt changes may reflect major investments in renewable energy infrastructure, changes in energy reporting practices, or significant policy shifts. In contrast, many states exhibit more gradual upward trends, consistent with the long-term nature of energy system transitions.
 
 
-#Figure 2: Renewable Generation Across Time
-Figure 2 presents boxplots of renewable electricity generation shares in 2008 and 2009.
-The distributions appear relatively similar across the two years, suggesting that large shifts in renewable generation did not occur during this short time period. This observation is important because limited variation over time may reduce the ability of fixed-effects models to identify policy effects.
+# Interpreting result of OLS Model: Model 1
+To examine the relationship between Renewable Portfolio Standards (RPS) and renewable electricity generation, an ordinary least squares (OLS) regression model was estimated with renewable electricity generation share as the dependent variable and RPS requirements as the independent variable.
+The results indicate a positive and statistically significant relationship between RPS requirements and renewable electricity generation (β = 0.823, p < .001). Specifically, a one-percentage-point increase in a state's RPS requirement is associated with an estimated 0.82 percentage-point increase in the share of electricity generated from renewable sources. This finding suggests that states with stronger renewable energy mandates tend to produce larger shares of renewable electricity.
+The model is statistically significant overall (F(1,766) = 48.48, p < .001), indicating that RPS requirements are systematically associated with renewable electricity generation. However, the explanatory power of the model remains relatively modest. The R² value of 0.060 indicates that RPS requirements explain approximately 6% of the variation in renewable electricity generation across state-year observations. While this suggests that RPS policies are an important predictor of renewable energy outcomes, most of the variation remains attributable to factors not included in the model.
+Overall, the findings provide preliminary evidence that stronger Renewable Portfolio Standards are associated with higher levels of renewable electricity generation. Nevertheless, renewable energy production is likely influenced by a broader set of factors, including natural resource availability, geographic conditions, electricity market structures, technological development, and state-specific policy environments. Subsequent fixed-effects models can help determine whether this positive relationship persists after accounting for differences across states and over time.
 
-# Model 1: Ordinary Least Squares Regression
-The first model estimates a simple bivariate relationship between Renewable Portfolio Standards and renewable electricity generation.
+# Interpreting State Fixed Effect Model: Model 2
+To account for unobserved differences across states, a state fixed-effects model was estimated. This specification controls for time-invariant state characteristics that may influence renewable electricity generation, such as geography, renewable resource availability, historical energy infrastructure, political culture, and long-standing energy policies. By focusing on within-state changes over time, the model provides a more rigorous assessment of the relationship between Renewable Portfolio Standards (RPS) and renewable electricity generation.
+The results indicate a positive and highly statistically significant relationship between RPS requirements and renewable electricity generation (β = 0.577, p < .001). Specifically, a one-percentage-point increase in a state's RPS requirement is associated with an estimated 0.58 percentage-point increase in the share of electricity generated from renewable sources. Substantively, a 10-percentage-point increase in a state's RPS target is associated with approximately a 5.8 percentage-point increase in renewable electricity generation.
+Compared to the baseline OLS model, the estimated effect remains positive and statistically significant, although the magnitude is somewhat smaller. This finding suggests that part of the association observed in the OLS model reflects persistent differences between states. However, even after controlling for these stable state characteristics, increases in RPS requirements remain associated with higher levels of renewable electricity generation. This result provides stronger evidence that renewable portfolio standards contribute to renewable energy development rather than merely reflecting differences between states that are already more supportive of renewable energy.
+Overall, the fixed-effects results strengthen confidence in the relationship between RPS policies and renewable electricity generation by demonstrating that the positive association persists when comparing changes within states over time rather than relying solely on cross-state differences.
 
-Results indicate a positive and statistically significant association between RPS requirements and renewable electricity generation (β = 58.65, p = .041). Substantively, a ten-percentage-point increase in a state's RPS requirement is associated with approximately a 5.9-percentage-point increase in renewable electricity generation.
+# Interpreting state and year fixed effect: Model 3
+To further examine the relationship between Renewable Portfolio Standards (RPS) and renewable electricity generation, a state and year fixed-effects model was estimated. This specification controls for both time-invariant differences across states and factors that change over time but affect all states similarly. State fixed effects account for characteristics such as geography, renewable resource availability, political culture, and historical energy infrastructure, while year fixed effects capture national trends, technological developments, and broader economic conditions that may influence renewable energy generation.
+The results indicate a positive and highly statistically significant relationship between RPS requirements and renewable electricity generation (β = 0.448, p < .001). Specifically, a one-percentage-point increase in a state's RPS requirement is associated with an estimated 0.45 percentage-point increase in the share of electricity generated from renewable sources. Substantively, a 10-percentage-point increase in RPS requirements is associated with approximately a 4.5 percentage-point increase in renewable electricity generation.
+Compared to the baseline OLS model (β = 0.823) and the state fixed-effects model (β = 0.577), the estimated effect decreases in magnitude but remains highly significant. This pattern suggests that some of the association observed in simpler models reflects persistent differences between states and broader temporal trends. Nevertheless, the continued significance of the coefficient after accounting for both state and year effects provides stronger evidence that Renewable Portfolio Standards contribute to increases in renewable electricity generation.
+Overall, the state and year fixed-effects model provides the most rigorous test of the relationship examined in this study. The findings indicate that increases in RPS requirements are associated with higher levels of renewable electricity generation within states over time, even after accounting for state-specific characteristics and nationwide trends affecting renewable energy development.
 
-The model explains approximately 7% of the variation in renewable electricity generation (R² = .070). Although statistically significant, this relatively low explanatory power suggests that many other factors contribute to renewable energy outcomes across states.
+# Interpreting four three models
+Table X presents four models examining the relationship between Renewable Portfolio Standards (RPS) and the share of electricity generated from renewable sources. In the simplest bivariate OLS model (Model 1), RPS requirements are positively and statistically significantly associated with renewable generation (β = 0.823, p < .001). This suggests that a one-percentage-point increase in a state's RPS requirement is associated with approximately a 0.82 percentage-point increase in the share of renewable electricity generation. However, the model explains only about 6% of the variation in renewable generation (R² = .060), indicating that many other factors influence renewable energy outcomes.
+Model 2 introduces state fixed effects, controlling for time-invariant characteristics of states such as geography, resource endowments, political culture, and historical energy infrastructure. The estimated effect of RPS remains positive and statistically significant (β = 0.577, p < .001), although the coefficient decreases in magnitude. This suggests that part of the relationship observed in Model 1 reflects differences between states, but even after accounting for these differences, states tend to generate a larger share of renewable electricity when they adopt stronger RPS requirements. The substantial increase in model fit (R² = .961) indicates that persistent differences among states explain a large share of the variation in renewable generation.
+Model 3 adds a linear time trend instead of state fixed effects. The coefficient for RPS remains positive and significant (β = 0.897, p < .001), while the year variable is not statistically significant (β = -0.207, p > .05). This suggests that a simple national time trend does not explain much of the observed relationship between RPS policies and renewable generation. The model's explanatory power remains nearly identical to Model 1 (R² = .060), indicating that year alone contributes little additional information.
+The most rigorous specification is Model 4, which includes both state and year fixed effects. In this model, the RPS coefficient remains positive and statistically significant (β = 0.448, p < .001). This coefficient can be interpreted as a within-state effect: when a state's RPS requirement increases by one percentage point, the share of renewable electricity generation is associated with an increase of approximately 0.45 percentage points, holding constant both state-specific characteristics and nationwide changes affecting all states in a given year. Although the coefficient is smaller than in previous models, its continued significance provides stronger evidence that RPS policies are associated with higher renewable electricity generation rather than merely reflecting differences across states or broader temporal trends.
 
-Overall, the findings provide preliminary evidence that stronger renewable energy mandates are associated with higher levels of renewable electricity generation.
+As more controls are introduced, the estimated effect of RPS becomes smaller but remains statistically significant. This is generally what researchers hope to see. It suggests that part of the raw relationship is explained by underlying differences between states, yet a meaningful positive association persists even after accounting for state-specific and year-specific factors. Therefore, the findings provide evidence that stronger Renewable Portfolio Standards are associated with greater renewable electricity generation, although the magnitude of the relationship is more modest once unobserved heterogeneity is taken into account.
 
-# Model 2: State Fixed Effects
-To account for stable differences across states, a state fixed-effects model was estimated.
-
-After controlling for state-specific characteristics, the estimated effect of RPS requirements remains positive but becomes substantially smaller and statistically insignificant (β = 0.266, p = .188).
-
-This result suggests that much of the positive association observed in the OLS model may reflect persistent differences between states rather than policy changes occurring within states. States with stronger renewable energy policies may also possess favorable renewable resources, supportive political environments, or historical investments in renewable infrastructure.
-
-# Model 3: State and Year Fixed Effects
-The third model incorporates both state and year fixed effects.
-
-After accounting for both state-specific and year-specific factors, the estimated coefficient for RPS requirements becomes very small and statistically insignificant (β = -0.045, p = .815).
-
-The disappearance of the relationship suggests that the positive association observed in the OLS model may largely reflect cross-sectional differences between states rather than short-term causal effects of policy changes.
-
-A likely explanation is that renewable energy policies require time to influence electricity generation. Investments in renewable infrastructure often take several years to plan, finance, and construct, making it difficult to observe policy effects within a two-year window.
-
-# Model 4: State and Year Fixed Effects with Control Variable
-The final specification adds total electricity generation as a control variable.
-
-Neither RPS requirements nor total electricity generation are statistically significant predictors of renewable generation share. The coefficient for RPS remains small and close to zero (β = -0.055, p = .783), while total electricity generation also shows no significant association.
-
-The inclusion of the control variable does not materially alter the findings, suggesting that the lack of a detectable policy effect is not driven by differences in electricity generation scale across states.
-
-# Conclusion
-This preliminary analysis provides mixed evidence regarding the relationship between Renewable Portfolio Standards and renewable electricity generation. The bivariate OLS model suggests a positive and statistically significant association between stronger renewable energy mandates and renewable electricity production. However, this relationship disappears once state and year fixed effects are introduced.
-
-These findings indicate that differences between states may explain much of the observed relationship. States with stronger renewable energy policies may also possess favorable institutional, geographic, or economic conditions that support renewable energy development.
-
-Several limitations should be acknowledged. First, the dataset covers only two years (2008-2009), providing limited temporal variation. Second, renewable energy outcomes are influenced by many factors not included in the current models, such as natural resource availability, electricity prices, political institutions, and economic conditions. Future analysis should incorporate a longer time series and additional control variables to better assess the long-term effects of Renewable Portfolio Standards on renewable electricity generation.
-
-
-
+The two-way fixed effects model provides the most credible estimate, suggesting that a one-percentage-point increase in a state's RPS requirement is associated with a 0.45 percentage-point increase in renewable electricity generation after controlling for both state and year fixed effects. This indicates that RPS policies are positively associated with renewable energy development, although the effect is smaller than implied by simple cross-sectional comparisons.
 ```{r}
 #label: timestamp-end
 
